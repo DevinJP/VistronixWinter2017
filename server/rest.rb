@@ -3,11 +3,9 @@ require 'sinatra/json'
 require 'net/http'
 require 'bundler'
 
-###This is the Test BRANCH
-
 Bundler.require
 
-set :bind, '10.19.100.170'
+set :bind, '0.0.0.0'
 set :port, 8080
 
 get '/' do
@@ -64,12 +62,14 @@ get '/kill-comms' do
 end
 
 def checkDom0()
-	command = "nc -w 3 -z 10.19.100.75 22 > /dev/null ; echo $?"
+	domIP = "0.0.0.0"
+	command = "nc -w 3 -z " + domIP + " 22 > /dev/null ; echo $?"
 	statusDom0 = %x(#{command})
 end
 
 def checkComms()
-        command = "nc -w 3 -z 10.19.100.219 22 > /dev/null ; echo $?"
+	commsIP = "0.0.0.0"
+        command = "nc -w 3 -z " + commsIP + " 22 > /dev/null ; echo $?"
         statusComms = %x(#{command})
 end
 
