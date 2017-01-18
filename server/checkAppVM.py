@@ -3,11 +3,12 @@ import os
 import sys
 import paramiko
 
-command = "nc -w 3 -z 192.168.202.129 22 > /dev/null ; echo $?"
+appIP = "0.0.0.0"
+command = "nc -w 3 -z " + appIP + " 22 > /dev/null ; echo $?"
 
-clientIP = '10.19.100.161'
-clientUser = 'comms'
-clientPass = 'vistronix'
+clientIP = '0.0.0.0'
+clientUser = 'root'
+clientPass = 'password'
 
 ssh = paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
