@@ -2,36 +2,59 @@ require 'sinatra'
 require 'sinatra/json'
 require 'bundler'
 
+
 Bundler.require
 
-set :bind, '10.19.100.161'
+set :bind, '10.19.100.219'
 set :port, 8080
 
-get '/' do
-	"Hey this is our project, type in 'index' in the address bar for our app!\n"
+before do
+	cache_control :public, :no_cache
+	headers 'Access-Control-Allow-Origin' => '*'
 end
 
-get '/index' do
-	headers 'Access-Control-Allow-Origin' => '*'
-	send_file File.join(settings.public_folder, "index.html")
-	status 200
-end
-
-get '/health-debian' do
-	headers 'Access-Control-Allow-Origin' => '*'
-	run_sys_health()
-	send_file File.join(settings.public_folder, "health-debian.txt")
+get '/health-kali' do
+	#cache_control :public, :no_cache 
+	#headers 'Access-Control-Allow-Origin' => '*'
+	send_file File.join(settings.public_folder, "health-kali.txt")
 	status 200
 end
 
 get '/start' do
-	init()
+        headers 'Access-Control-Allow-Headers' => "accept, authorization, origin"
+	startRadios()
 	status 200
 end
 
 get '/kill' do
-	kill()
+        headers 'Access-Control-Allow-Headers' => "accept, authorization, origin"
+        killRadios()
+        status 200
+end
+
+
+get '/start-app' do
+        headers 'Access-Control-Allow-Headers' => "accept, authorization, origin"
+	initApp()
 	status 200
+end
+
+get '/kill-app' do
+        headers 'Access-Control-Allow-Headers' => "accept, authorization, origin"
+	killApp()
+	status 200
+end
+
+get '/app' do
+	headers 'Access-Control-Allow-Headers' => "accept, authorization, origin"
+	statusApp = checkApp()
+	if statusApp.to_i == 0 # Available
+		status 200
+	elsif statusApp.to_i == 1  #not available
+		status 409
+	else
+		status 666	
+	end
 end
 
 get '/100' do
@@ -59,7 +82,7 @@ get '/500' do
         status 200
 end
 
-get '/600' do
+get '/601' do
         send_file File.join(settings.public_folder, "600done.wav")
         status 200
 end
@@ -114,29 +137,53 @@ get '/1600' do
         status 200
 end
 
-def run_sys_health()
-	command = "python executehealth.py"
-	%x(#{command})
-end
-
-def init()
+def startRadios()
 	command = "python init.py"
-	%x(#{command})
+        %x(#{command})
 end
 
-def kill()
+def killRadios()
         command = "python killradios.py"
         %x(#{command})
+end
+
+def initApp()
+	command = "echo vistronix | sudo vmrun start /home/comms/vmware/Ubuntu/Ubuntu.vmx nogui"
+	%x(#{command})
+end
+
+def killApp()
+	command = "echo vistronix | sudo vmrun stop /home/comms/vmware/Ubuntu/Ubuntu.vmx"
+        %x(#{command})
+end
+
+def checkApp()
+	command = "nc -w 2 -z 192.168.202.129 22 > /dev/null ; echo $?"	
+	statusApp = %x(#{command})	
 end
 
 post '/post' do
 	if params[:wav] && params[:wav][:filename]
    		filename = params[:wav][:filename]
 		file = params[:wav][:tempfile]
-		path = "./public/#{filename}"
+		path = "public/#{filename}"
 
-		# Write file to disk
-		File.open(path, 'wb') do |f|
+		# Write file to public directory
+		File.open(path, 'wb+') do |f|
+			f.write(file.read)
+		end
+	end
+	status 200
+end
+
+post '/post-health' do
+	if params[:txt] && params[:txt][:filename]
+		filename = params[:txt][:filename]
+		file = params[:txt][:tempfile]
+		path = "public/#{filename}"
+
+		#write file to public directory
+		File.open(path, 'wb+') do |f|
 			f.write(file.read)
 		end
 	end
