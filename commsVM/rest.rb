@@ -7,6 +7,8 @@ Bundler.require
 set :bind, '10.19.100.219'
 set :port, 8080
 
+$appIP = '10.19.100.219'
+
 before do
 	cache_control :public, :no_cache
 	headers 'Access-Control-Allow-Origin' => '*'
@@ -145,17 +147,18 @@ def killRadios()
 end
 
 def initApp()
-	command = "echo vistronix | sudo vmrun start /home/comms/vmware/Ubuntu/Ubuntu.vmx nogui"
+	command = "echo password | sudo vmrun start /home/comms/vmware/Ubuntu/Ubuntu.vmx nogui"
 	%x(#{command})
 end
 
 def killApp()
-	command = "echo vistronix | sudo vmrun stop /home/comms/vmware/Ubuntu/Ubuntu.vmx"
+	command = "echo password | sudo vmrun stop /home/comms/vmware/Ubuntu/Ubuntu.vmx"
         %x(#{command})
 end
 
 def checkApp()
-	command = "nc -w 2 -z 192.168.202.129 22 > /dev/null ; echo $?"	
+	appIP = '0.0.0.0'
+	command = "nc -w 2 -z " + appIP + " 22 > /dev/null ; echo $?"	
 	statusApp = %x(#{command})	
 end
 
