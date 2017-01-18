@@ -1,10 +1,10 @@
 import paramiko
 
-command = "vmrun start /home/janzaldi/vmware/Ubuntu\ 64-bit/Ubuntu\ 64-bit.vmx nogui"
+command = "vmrun start /home/user/path/to/Ubuntu.vmx nogui"
 
-clientIP = '10.19.100.101'
-clientUser = 'janzaldi'
-clientPass = 'vistronix'
+clientIP = '0.0.0.0'
+clientUser = 'root'
+clientPass = 'password'
 
 ssh = paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
