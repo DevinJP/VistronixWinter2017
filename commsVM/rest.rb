@@ -7,8 +7,6 @@ Bundler.require
 set :bind, '10.19.100.219'
 set :port, 8080
 
-$appIP = '10.19.100.219'
-
 before do
 	cache_control :public, :no_cache
 	headers 'Access-Control-Allow-Origin' => '*'
