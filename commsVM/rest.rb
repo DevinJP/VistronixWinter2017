@@ -2,7 +2,6 @@ require 'sinatra'
 require 'sinatra/json'
 require 'bundler'
 
-
 Bundler.require
 
 set :bind, '10.19.100.219'
@@ -14,8 +13,6 @@ before do
 end
 
 get '/health-kali' do
-	#cache_control :public, :no_cache 
-	#headers 'Access-Control-Allow-Origin' => '*'
 	send_file File.join(settings.public_folder, "health-kali.txt")
 	status 200
 end
