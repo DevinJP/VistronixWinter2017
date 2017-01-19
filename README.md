@@ -18,21 +18,45 @@ mkdir UbuntuVM
 unzip Ubuntu.zip -d UbuntuVM
 ```
 
-#### Configure the Networks 
-Bridge the network connection from the vm to the machine
+#### Configure CommsVM Network Settings 
 
-#### Load Nested VM
+##### Bridge Networks
+Bridge the network connection from the vm to the machine
+##### Firewall / Allow & Deny Network Setup
+Open sshd_config on the CommsVM
+```linux
+vim /etc/ssh/sshd_config
+```
+Then add the server's IP to the file around line 8 to restrict which 
+interfaces the CommsVM will allow to ssh in
+```linux
+ListenAddress 0.0.0.0
+```
+
+#### Load Nested VM (AppVM)
 Launch the nested vm from VMPlayer inside the first VM
+
+#### Configure AppVM Network Settings
+
+##### Firewall / Allow & Deny Network Setup
+Open sshd_config on the AppVM
+```linux
+vim /etc/ssh/sshd_config
+```
+Then add the CommsVM's IP to the file around line 8 to restrict which 
+interfaces the AppVM will allow to ssh in
+```linux
+ListenAddress 0.0.0.0
+```
 
 #### Configure Server-side Settings
 Edit the files for host, port, and user settings
 
 ##### Server Code
 
-index.html - lines 3 & 4 of the JS script element change them to the comms and server IPs respectively
+index.html - lines 3 of the JS script element change them to the server IP
 ```javascript
 var dir = new URL("http://0.0.0.0:8080/");
-var serverDir = new URL("http://0.0.0.0:8080/");
 ```
 checkAppVM.py - line 6 change **appIP** to AppVM's IP Address
 ```python
