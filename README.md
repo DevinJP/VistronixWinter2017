@@ -58,16 +58,6 @@ index.html - lines 3 of the JS script element change them to the server IP
 ```javascript
 var dir = new URL("http://0.0.0.0:8080/");
 ```
-checkAppVM.py - line 6 change **appIP** to AppVM's IP Address
-```python
-appIP = "0.0.0.0"
-```
-checkAppVM.py - line 9-11 change to the the CommsVM's IP and user info
-```python
-clientIP = '0.0.0.0'
-clientUser = 'root'
-clientPass = 'password'
-```
 initComms.py - line 3 change **command** to the path of the .vmx file to run (don't forget nogui at the end)
 ```python
 command = "vmrun start /home/user/path/to/Ubuntu.vmx nogui"
